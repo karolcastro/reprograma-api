@@ -36,3 +36,32 @@ exports.getSp = (req,res) =>{
     res.status(200).send(nomesSp)// mostra na tela o nome das alunas 
 
 }
+exports.getIdade = (req,res) =>{
+    const id = req.params.id // req = requisicao
+    const aluna = alunas.find(item => item.id == id)// objeto nao itera com map ou outro //o segundo id é o que esta na const id
+    const data = aluna.dateOfBirth
+    
+    const arrData = data.split('/')// separar dentro da array
+    const dia = arrData[0]// posicao que o dia vai ficar dentro da array
+    const mes = arrData[1]
+    const ano = arrData[2]
+    const idade = calcularIdade (ano, mes, dia)
+
+    // console.log(data)
+
+    res.status(200).send({idade})// colocar {} para ele aceitar que é um objeto e nao uma istring
+ 
+}
+function calcularIdade(anoDeNasc, mesDeNasc, diaDeNasc) { // para calcular a idade
+      const now = new Date()// instancia da data no dia de hoje
+      const anoAtual = now.getFullYear()// instancia do ano
+      const mesAtual = now.getMonth() + 1// instancia do mes
+      const hoje = now.getDate()// instancia do dia
+    
+      let idade = anoAtual - anoDeNasc //
+    
+      if (mesAtual < mesDeNasc || (mesAtual == mesDeNasc && hoje < diaDeNasc)) {
+        idade -= 1
+      }// funcao para calcular o mes correto que a menina faz aniversario
+      return idade
+    }
