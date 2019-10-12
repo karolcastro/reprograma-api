@@ -6,6 +6,6 @@ const controller = require('../controles/professorasController')// esta importan
 
 // rotas para o acesso // a ordem das rotas interfere
 router.get('/', controller.get)
-
+router.get('/:id', controller.getById)
 
 module.exports = router
