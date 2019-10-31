@@ -1,6 +1,8 @@
 
 // arquivo controler
 const alunas = require('../model/alunas.json')
+const fs = require('fs'); // arquivo file system para gravar as informações
+
 // esta pegando a lista de todas as alunas
 exports.get = (req, res) => {
     console.log(req.url)
@@ -8,7 +10,7 @@ exports.get = (req, res) => {
 }
 // exportar o id
 exports.getById = (req, res) => {
-    const id  = req.params.id
+    const id  = req.params.id// é o objeto de tudo que vc quer passar
     if (id > 17 || id <= 0){
         // res.send(' id nao é valido')
         res.redirect(301, 'https://www.mercadolivre.com.br/')// pode colocar qualquer pagina
@@ -65,3 +67,37 @@ function calcularIdade(anoDeNasc, mesDeNasc, diaDeNasc) { // para calcular a
       }// funcao para calcular o mes correto que a menina faz aniversario
       return idade
     }
+
+    // fazer o post para gravar as informacoes que foram acrescentadas no postman
+    // function caso tenha erro devolve uma resposta com o if
+    exports.post = (req, res) =>{
+        const {nome, dateOfBirth, nasceuEmSp, id, livros} = req.body;
+        alunas.push({nome, dateOfBirth, nasceuEmSp, id, livros});
+
+        //arquivo fs para conseguir escrever // utf8 é para entender os caracteres especiais
+        fs.writeFile('./src/model/alunas.json', JSON.stringify(alunas), 'utf8', function(err){
+            if (err){
+               return res.status(500).send({message: err}) ;
+            }
+            console.log(' The file was saved!')
+        });
+
+        return res.status(201).send(alunas);
+    }
+exports.postBooks = (req, res) =>{
+    const id = req.params.id
+    const aluna = alunas.find(aluna => aluna.id == id)
+    if (!aluna){
+        res.send('Nao encontrei esta aluna')
+    }
+    const {titulo, leu } = req.body;
+    alunas[aluna.id - 1].livros.push({ titulo, leu});
+
+    fs.writeFile('./src/model/alunas.json', JSON.stringify(alunas), 'utf8', function(err){
+        if (err){
+            return res.status(500).send({ message: err});
+        }
+        console.log('The file was saved! ')
+    })
+    return res.status(201).send(alunas[aluna.id - 1].livros);
+}

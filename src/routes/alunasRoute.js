@@ -12,6 +12,10 @@ router.get('/:id/Books', controller.getBooks) // criar rota dos livros
 router.get('/nasceuSp', controller.getSp)
 router.get('/:id/dateOfBirth', controller.getIdade)
 
+router.post('/',controller.post)// criar a rota post para inserir um novo cadastro a partir do postman
+router.post('/:id/Books',controller.postBooks)
+
+
 
 
 // //('/', function(req, res){// o caminho 

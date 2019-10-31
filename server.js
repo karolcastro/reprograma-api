@@ -1,4 +1,6 @@
-// ja consta no app entao nao precisa cha,mar aqui tb
+// este é o servidor da aplicação
+
+// ja consta no app entao nao precisa chamar aqui tb
 // const express =require ('express')// importar o express
 // const app = express()// chamar o express
 
