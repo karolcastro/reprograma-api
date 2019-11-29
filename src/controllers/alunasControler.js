@@ -3,7 +3,7 @@
 const alunas = require('../model/alunas.json')
 const fs = require('fs'); // arquivo file system para gravar as informações
 const bcrypt = require("bcrypt");// requisicao do bcrypt
-const bcryptSalt = 8;// tempo
+const bcryptSalt = 8;// qnt que vai embaralhar
 
 /*router.post("/signup", (req, res, next) => {
   const username = req.body.username;
@@ -81,11 +81,12 @@ function calcularIdade(anoDeNasc, mesDeNasc, diaDeNasc) { // para calcular a ida
 
 // fazer o post para gravar as informacoes que foram acrescentadas no postman
 // function caso tenha erro devolve uma resposta com o if
-exports.post = (req, res) => {
-    const { nome, dateOfBirth, nasceuEmSp, id, livros } = req.body;
-    try {
+exports.post = async (req, res) => {// metodo sincrono
+    const { nome, password, dateOfBirth, nasceuEmSp, id, livros } = req.body;// password  gera a senha
+    const salt = bcrypt.genSaltSync(bcryptSalt);//identifica a quantidade de saltos
+    try {// tentativa de excucao do codigo
         const hashPass = await bcrypt.hashSync(password, salt);
-        alunas.push({ nome, hashPass, dateOfBirth, nasceuEmSp, id, livros });
+        alunas.push({ nome, hashPass, dateOfBirth, nasceuEmSp, id, livros });// hash transforma a senha 
 
         //arquivo fs para conseguir escrever // utf8 é para entender os caracteres especiais
         fs.writeFile('./src/model/alunas.json', JSON.stringify(alunas), 'utf8', function (err) {
@@ -95,7 +96,7 @@ exports.post = (req, res) => {
             console.log(' The file was saved!')
         });
         return res.status(201).send(alunas);
-    } catch (e) {
+    } catch (e) {// caso der erro o catch entra para informar um erro
         return res.status(401).json({ error: 'error' });
     }
 }

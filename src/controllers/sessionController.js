@@ -15,11 +15,11 @@ exports.accessToken = (req, res) => {
     return res.status(401).json({ error: 'user not found' });
   }
 
-  const {id, nome, hashPass } = user;
+  const {id, nome, hashPass } = user;//quebra o user em id nome e hashpass
 
   try {
-    checkPassword(passwordEntry, hashPass);
-  } catch (e) {
+    checkPassword(passwordEntry, hashPass);//passworentry é o que veio la de cima// hashpass veio do json
+  } catch (error) {
     return res.status(401).json({ error: 'password does not match' });
   }
 
@@ -33,7 +33,7 @@ exports.accessToken = (req, res) => {
         expiresIn: authConfig.expiresIn,
       }),
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(401).json({ error: 'erro' });
   }
 }
