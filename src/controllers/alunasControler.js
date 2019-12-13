@@ -13,10 +13,7 @@ const bcryptSalt = 8;// qnt que vai embaralhar
 */
 
 // esta pegando a lista de todas as alunas
-exports.get = (req, res) => {
-    console.log(req.url)
-    res.status(200).send(alunas)
-}
+
 // buscar por id
 exports.getById = (req, res) => {
     const id = req.params.id// é o objeto de tudo que vc quer passar
@@ -86,7 +83,8 @@ exports.post = async (req, res) => {// metodo sincrono
     const salt = bcrypt.genSaltSync(bcryptSalt);//identifica a quantidade de saltos
     try {// tentativa de excucao do codigo
         const hashPass = await bcrypt.hashSync(password, salt);
-        alunas.push({ nome, hashPass, dateOfBirth, nasceuEmSp, id, livros });// hash transforma a senha 
+        alunas.push({ nome, hashPass, dateOfBirth, nasceuEmSp, id, livros });// hash transforma a senha
+    
 
         //arquivo fs para conseguir escrever // utf8 é para entender os caracteres especiais
         fs.writeFile('./src/model/alunas.json', JSON.stringify(alunas), 'utf8', function (err) {
@@ -96,7 +94,7 @@ exports.post = async (req, res) => {// metodo sincrono
             console.log(' The file was saved!')
         });
         return res.status(201).send(alunas);
-    } catch (e) {// caso der erro o catch entra para informar um erro
+    } catch (error) {// caso der erro o catch entra para informar um erro
         return res.status(401).json({ error: 'error' });
     }
 }
